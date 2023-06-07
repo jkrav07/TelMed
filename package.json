@@ -1,0 +1,27 @@
+{
+
+  "scripts": {
+    "start": "node ./server/index.js",
+    "server-dev": "npx nodemon --watch server",
+    "dev": "npx webpack --watch",
+    "build": "npx webpack --mode production"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.21.5",
+    "@babel/preset-react": "^7.18.6",
+    "eslint": "^8.39.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.27.5",
+    "webpack-cli": "^5.0.2"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "fast-csv": "^4.3.6",
+    "nodemon": "^2.0.7",
+    "pg": "^8.11.0",
+    "pg-promise": "^11.4.3",
+    "webpack": "^5.41.0"
+  }
+}
