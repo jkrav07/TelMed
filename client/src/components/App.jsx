@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import StartPage from './StartPage';
-import PatientApptPage from './PatientApptPage'
+import PatientApptPage from './PatientApptPage';
 
 export default function App() {
   const [page, setPage] = useState(0);

@@ -1,4 +1,5 @@
 import React from 'react';
+import PatientApptPage from './PatientApptPage';
 
 export default function StartPage({ setPage }) {
   function buttonOnClick(pageNum) {

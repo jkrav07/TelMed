@@ -6,7 +6,7 @@
 
     "server-dev": "npx nodemon --watch server",
 
-    "dev": "npx webpack --watch --mode production",
+    "dev": "npx webpack --watch --mode development",
 
     "build": "npx webpack --mode production"
 
@@ -34,6 +34,8 @@
 
     "babel-loader": "^9.1.2",
 
+    "css-loader": "^6.8.1",
+
     "dotenv": "^10.0.0",
 
     "express": "^4.17.1",
@@ -48,7 +50,11 @@
 
     "react": "^18.2.0",
 
+    "react-calendar": "^4.2.1",
+
     "react-dom": "^18.2.0",
+
+    "style-loader": "^3.3.3",
 
     "webpack": "^5.41.0"
 
