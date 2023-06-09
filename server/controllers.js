@@ -11,7 +11,7 @@ controllers.addAppt = async (req, res) => {
   const {patientName} = req.body;
   const {patientEmail} = req.body;
   const {providerId} = req.body;
-  const {symptoms} = req.body;
+  const symptoms = req.body.symptoms || 'n/a';
   let patientId;
 
   try {
@@ -29,18 +29,16 @@ controllers.addAppt = async (req, res) => {
         res.send(`Patient "${patientName}" does not match ${patientEmail}`);
         //console.log(res.send(`Patient "${patientName}" does not match ${patientEmail}`))
       } else {
-        patientId = result[0].patient_id;
+        patientId = patients[0].patient_id;
       }
-
-      await model.addAppt(date, timeslotId, patientId, providerId, symptoms);
-      console.log(result);
-      res.status(201);
-      console.log('appointment was added to database')
     }
+    let apt = await model.addAppt(date, timeslotId, patientId, providerId, symptoms);
+    console.log('appointment was added to database', apt);
+    res.status(201).send(apt);;
   }
   catch (err) {
-    console.error('FAILED TO FIND PATIENT IN DB:', err.message);
-    res.status(501);
+    console.error('ERROR:', err.message);
+    res.status(500).send(err.message);
   }
 };
 
@@ -56,7 +54,14 @@ controllers.getTimeslots = (req, res) => {
 };
 
 controllers.getProviders = (req, res) => {
-
+  const date = req.query.date;
+  const timeslotId = req.query.timeslot;
+  console.log('req qury:', req.query);
+  model.retrieveProviders(date, timeslotId*1)
+    .then(result => {
+      console.log('prov:', result);
+      res.send(result);
+    })
 };
 
 /*

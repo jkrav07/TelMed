@@ -2083,7 +2083,7 @@ function App() {
     page = _useState2[0],
     setPage = _useState2[1];
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    id: "App"
+    id: "app"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "title"
   }, "Express Med"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, page === 0 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_StartPage__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -2110,10 +2110,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_calendar__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-calendar */ "./node_modules/react-calendar/dist/esm/index.js");
+/* harmony import */ var react_calendar__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-calendar */ "./node_modules/react-calendar/dist/esm/index.js");
 /* harmony import */ var react_calendar_dist_Calendar_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-calendar/dist/Calendar.css */ "./node_modules/react-calendar/dist/Calendar.css");
 /* harmony import */ var _Timeslots__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Timeslots */ "./client/src/components/Timeslots.jsx");
 /* harmony import */ var _Providers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Providers */ "./client/src/components/Providers.jsx");
+/* harmony import */ var _PatientInfo__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./PatientInfo */ "./client/src/components/PatientInfo.jsx");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -2126,39 +2127,53 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+
 function PatientApptPage(setPage) {
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
     _useState2 = _slicedToArray(_useState, 2),
-    timeslots = _useState2[0],
-    setTimeslots = _useState2[1];
+    patientInfoShown = _useState2[0],
+    setPatientInfoShown = _useState2[1];
   var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState4 = _slicedToArray(_useState3, 2),
-    providers = _useState4[0],
-    setProviders = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    timeslots = _useState4[0],
+    setTimeslots = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    selectedTimeslot = _useState6[0],
-    setSelectedTimeslot = _useState6[1];
+    providers = _useState6[0],
+    setProviders = _useState6[1];
   var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState8 = _slicedToArray(_useState7, 2),
-    selectedProvider = _useState8[0],
-    setSelectedProvider = _useState8[1];
+    selectedTimeslot = _useState8[0],
+    setSelectedTimeslot = _useState8[1];
   var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState10 = _slicedToArray(_useState9, 2),
-    patientName = _useState10[0],
-    setPatientName = _useState10[1];
+    selectedProvider = _useState10[0],
+    setSelectedProvider = _useState10[1];
   var _useState11 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState12 = _slicedToArray(_useState11, 2),
-    patientEmail = _useState12[0],
-    setPatientEmail = _useState12[1];
-  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(new Date()),
+    patientName = _useState12[0],
+    setPatientName = _useState12[1];
+  var _useState13 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState14 = _slicedToArray(_useState13, 2),
-    selectedDate = _useState14[0],
-    onSelectedDateChange = _useState14[1];
-  console.log(selectedDate);
+    patientEmail = _useState14[0],
+    setPatientEmail = _useState14[1];
+  var _useState15 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(new Date()),
+    _useState16 = _slicedToArray(_useState15, 2),
+    selectedDate = _useState16[0],
+    onSelectedDateChange = _useState16[1];
+  var patientInfoObj = {
+    selectedDate: selectedDate,
+    selectedTimeslot: selectedTimeslot,
+    selectedProvider: selectedProvider,
+    patientName: patientName,
+    patientEmail: patientEmail,
+    setPatientName: setPatientName,
+    setPatientEmail: setPatientEmail
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     axios__WEBPACK_IMPORTED_MODULE_1___default().get('/telmed/timeslots').then(function (result) {
       setTimeslots(result.data);
+      setSelectedTimeslot(result.data[0].timeslot_id);
       console.log('timeslots after initial GET:', timeslots);
     })["catch"](function (err) {
       console.error("FAILED TO FETCH TIMESLOTS FROM SERVER:", err.message);
@@ -2166,27 +2181,49 @@ function PatientApptPage(setPage) {
   }, []);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     axios__WEBPACK_IMPORTED_MODULE_1___default().get("/telmed/providers?date=".concat(selectedDate.toISOString(), "&timeslot=").concat(selectedTimeslot)).then(function (result) {
+      console.log('doctors:', result.data);
       setProviders(result.data);
     })["catch"](function (err) {
       console.error("FAILED TO FETCH PROVIDERS FROM SERVER:", err.message);
     });
-  }, [selectedTimeslot]);
-  function onBookClick() {}
-  ;
+  }, [selectedTimeslot, selectedDate]);
+  function onFinishSubmitClick(event) {
+    event.preventDefault();
+    setPatientInfoShown(false);
+    var apptInfo = {
+      date: selectedDate,
+      timeslotId: selectedTimeslot * 1,
+      providerId: selectedProvider.provider_id,
+      patientName: patientName,
+      patientEmail: patientEmail
+    };
+    console.log('posting:', apptInfo);
+    axios__WEBPACK_IMPORTED_MODULE_1___default().post('/telmed/appt', apptInfo).then(function (result) {
+      console.log('APPT ADDED');
+    })["catch"](function (err) {
+      console.error(err.message);
+    });
+  }
   function onInputChange(event, set) {
     set(event.target.value);
   }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "patient-appt-page"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Book Your Appointment"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
     id: "patient-appt-page-form",
-    onSubmit: onBookClick
+    onSubmit: function onSubmit(e) {
+      return onFinishSubmitClick(e);
+    }
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "booking-info"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "patient-calendar"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_calendar__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_calendar__WEBPACK_IMPORTED_MODULE_6__["default"], {
     onChange: onSelectedDateChange,
     value: selectedDate
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "boking-time-providers"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "timeslots-list"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Timeslots__WEBPACK_IMPORTED_MODULE_3__["default"], {
     timeslots: timeslots,
@@ -2195,10 +2232,62 @@ function PatientApptPage(setPage) {
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "providers-list"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Providers__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    selectedDate: selectedDate,
-    selectedTimeslot: selectedTimeslot,
-    setSelectedProvider: setSelectedProvider
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    setSelectedProvider: setSelectedProvider,
+    providers: providers
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_PatientInfo__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    show: patientInfoShown,
+    setPatientInfoShown: setPatientInfoShown,
+    patientInfoObj: patientInfoObj
+  })));
+}
+
+/***/ }),
+
+/***/ "./client/src/components/PatientInfo.jsx":
+/*!***********************************************!*\
+  !*** ./client/src/components/PatientInfo.jsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ PatientInfo)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function PatientInfo(_ref) {
+  var show = _ref.show,
+    setPatientInfoShown = _ref.setPatientInfoShown,
+    patientInfoObj = _ref.patientInfoObj;
+  var selectedDate = patientInfoObj.selectedDate,
+    selectedTimeslot = patientInfoObj.selectedTimeslot,
+    selectedProvider = patientInfoObj.selectedProvider,
+    patientName = patientInfoObj.patientName,
+    patientEmail = patientInfoObj.patientEmail,
+    setPatientName = patientInfoObj.setPatientName,
+    setPatientEmail = patientInfoObj.setPatientEmail;
+  function onInputChange(event, set) {
+    set(event.target.value);
+  }
+  function onSubmitClick() {
+    setPatientInfoShown(true);
+  }
+  function onCancelClick() {
+    setPatientInfoShown(false);
+  }
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, !show ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    id: "book-button",
+    type: "button",
+    className: "rounded-full",
+    onClick: onSubmitClick
+  }, "BOOK") : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "patient-info"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "patient-name"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
     id: "patient-name-title"
@@ -2225,8 +2314,13 @@ function PatientApptPage(setPage) {
     },
     required: true
   })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
-    id: "book-button"
-  }, "Book")));
+    type: "cancel",
+    onClick: onCancelClick
+  }, "CANCEL"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+    id: "book-button",
+    type: "submit",
+    className: "rounded-full"
+  }, "FINISH BOOKING")));
 }
 
 /***/ }),
@@ -2249,9 +2343,30 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Providers(_ref) {
-  var selectedDate = _ref.selectedDate,
-    selectedTimeslot = _ref.selectedTimeslot,
-    setSelectedProvider = _ref.setSelectedProvider;
+  var setSelectedProvider = _ref.setSelectedProvider,
+    providers = _ref.providers;
+  function onProviderClick(provider) {
+    setSelectedProvider(provider);
+  }
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    className: "providers"
+  }, providers.map(function (provider) {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(Provider, {
+      provider: provider
+    });
+  }));
+  function Provider(_ref2) {
+    var provider = _ref2.provider;
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+      className: "provider",
+      onClick: function onClick() {
+        onProviderClick(provider);
+      }
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", {
+      src: "./assets/_MG_0171.jpg",
+      height: "100"
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, provider.provider_name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "$", provider.price));
+  }
 }
 
 /***/ }),
@@ -2313,9 +2428,7 @@ function Timeslots(_ref) {
   var timeslots = _ref.timeslots,
     selectedTimeslot = _ref.selectedTimeslot,
     setSelectedTimeslot = _ref.setSelectedTimeslot;
-  console.log('selectedTimeslot:', selectedTimeslot);
   function onTimeslotChange(event) {
-    //console.log(event.target.value);
     setSelectedTimeslot(event.target.value);
   }
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {

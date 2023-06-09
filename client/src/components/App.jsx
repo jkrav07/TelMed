@@ -6,7 +6,7 @@ export default function App() {
   const [page, setPage] = useState(0);
 
   return (
-    <div id="App">
+    <div id="app">
       <div id='title'>Express Med</div>
       <div>
       {

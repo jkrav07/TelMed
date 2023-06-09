@@ -8,3 +8,24 @@
   --bg-color: #ffffff;
 }
 
+#patient-appt-page {
+  max-width: 1280px;
+  margin-left: 15%;
+}
+
+#app {
+  max-width: 80%;
+  margin: auto;
+  padding: 10px;
+
+
+}
+
+#title {
+  color: var(--font-color-secondary);
+  font-family: 'Lato', sans-serif;
+  font-size: 48px;
+  margin-top: 20%;
+  text-align: center;
+}
+

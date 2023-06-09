@@ -3,9 +3,8 @@ import axios from 'axios';
 
 
 export default function Timeslots({ timeslots, selectedTimeslot, setSelectedTimeslot }) {
-  console.log('selectedTimeslot:', selectedTimeslot);
+
   function onTimeslotChange(event) {
-    //console.log(event.target.value);
     setSelectedTimeslot(event.target.value);
   }
 
