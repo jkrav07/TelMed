@@ -10,5 +10,10 @@ router.get('/providers', controllers.getProviders);
 
 router.post('/appt', controllers.addAppt);
 
+router.get('/providerPage/:email', controllers.getProviderInfo);
+
+router.delete('/providerPage/:apptId', controllers.cancelAppt)
+
+
 
 module.exports = router;

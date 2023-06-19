@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import convertTime from 'convert-time';
 
 
 export default function Timeslots({ timeslots, selectedTimeslot, setSelectedTimeslot }) {
@@ -24,13 +25,14 @@ export default function Timeslots({ timeslots, selectedTimeslot, setSelectedTime
 
 
 function RenderTimeslot( {timeslot} ) {
-
+  const startTime = convertTime(timeslot.starttime);
+  const endTime = convertTime(timeslot.endtime);
 
   return (
       <option value={timeslot.timeslot_id}>
-        {timeslot.starttime}
+        {startTime}
         {' - '}
-        {timeslot.endtime}
+        {endTime}
       </option>
 
   );

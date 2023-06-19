@@ -7,7 +7,7 @@ import Providers from './Providers';
 import PatientInfo from './PatientInfo';
 
 
-export default function PatientApptPage(setPage) {
+export default function PatientApptPage() {
   const [patientInfoShown, setPatientInfoShown] = useState(false);
   const [timeslots, setTimeslots] = useState([]);
   const [providers, setProviders] = useState([]);
@@ -16,6 +16,7 @@ export default function PatientApptPage(setPage) {
   const [patientName, setPatientName] = useState('');
   const [patientEmail, setPatientEmail] = useState('');
   const [selectedDate, onSelectedDateChange] = useState(new Date());
+  const [apptCounter, setApptCounter] = useState(0);
 
   const patientInfoObj = {
     selectedDate,
@@ -48,7 +49,7 @@ export default function PatientApptPage(setPage) {
       .catch(err => {
         console.error("FAILED TO FETCH PROVIDERS FROM SERVER:", err.message);
       })
-  }, [selectedTimeslot, selectedDate])
+  }, [selectedTimeslot, selectedDate, apptCounter])
 
   function onFinishSubmitClick(event) {
     event.preventDefault();
@@ -64,6 +65,7 @@ export default function PatientApptPage(setPage) {
     axios.post('/telmed/appt', apptInfo)
       .then(result => {
         console.log('APPT ADDED');
+        setApptCounter(apptCounter + 1);
       })
       .catch(err => {
         console.error(err.message);
@@ -75,27 +77,30 @@ export default function PatientApptPage(setPage) {
   }
 
   return (
-    <div id="patient-appt-page">
-      <div>Book Your Appointment</div>
+    <div id="patient-appt-page" className="">
+      <div>SELECT DATE:</div>
       <form id="patient-appt-page-form" onSubmit={(e) => onFinishSubmitClick(e)}>
-
         <div className="booking-info">
-          <div id="patient-calendar">
-            <Calendar onChange={onSelectedDateChange} value={selectedDate} />
-          </div>
-
-          <div className="boking-time-providers"></div>
-          <div id="timeslots-list">
-            <Timeslots timeslots={timeslots} selectedTimeslot={selectedTimeslot} setSelectedTimeslot={setSelectedTimeslot} />
-          </div>
-
-          <div id="providers-list">
-            <Providers setSelectedProvider={setSelectedProvider} providers={providers}/>
+          <div className="topgrid grid grid-flow-col">
+            <div className="col-start-1 col-end-1">
+              <div id="patient-calendar">
+                <Calendar onChange={onSelectedDateChange} value={selectedDate}/>
+              </div>
+              <div id="timeslots-list">
+                <div>SELECT TIMESLOT:</div>
+                <Timeslots timeslots={timeslots} selectedTimeslot={selectedTimeslot} setSelectedTimeslot={setSelectedTimeslot} />
+              </div>
+            </div>
+            <div id="providers-list" className="col-start-2 col-end-2">
+              <Providers
+                setSelectedProvider={setSelectedProvider}
+                providers={providers}
+                selectedProvider={selectedProvider}
+              />
+            </div>
           </div>
         </div>
-
         <PatientInfo show={patientInfoShown} setPatientInfoShown={setPatientInfoShown} patientInfoObj={patientInfoObj}/>
-
       </form>
     </div>
   );

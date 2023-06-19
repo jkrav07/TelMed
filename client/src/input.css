@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  :root {
+    --primary: #BFBFA7;
+    --primary-lighter: #d2d2c1;
+    --primary-darker: #acac96;
+    --secondary: #606060;
+    --font-color: #000000;
+    --font-color-secondary: #606060;
+    --bg-color: #aaaaaa;
+  }
+
+  #patient-appt-page {
+    max-width: 1280px;
+    margin-left: 3%;
+  }
+
+  #app {
+    max-width: 90%;
+    margin: auto;
+    padding: 10px;
+  }
+
+  #title {
+    color: var(--font-color-secondary);
+    font-family: 'Lato', sans-serif;
+    font-size: 48px;
+    margin-top: 3%;
+    text-align: center;
+  }
+
+  #start-page {
+    color: var(--font-color-secondary);
+    font-family: 'Lato', sans-serif;
+    margin-top: 20 px;
+    text-align: center;
+  }
+
+  .sp-button {
+    margin: 10%;
+    min-width: 30%;
+    @apply h-10 px-6 font-semibold rounded-full text-white bg-violet-600 hover:bg-blue-600
+  }
+
+  .dg-button {
+    margin: 5%;
+    min-width: 20%;
+    @apply h-10 px-6 font-semibold rounded-full text-white bg-violet-600 hover:bg-blue-600
+  }
+
+  .dg-input {
+    margin: 1%;
+    min-width: 40%;
+    @apply h-10 px-6 font-semibold rounded-full hover:bg-blue-50
+  }
+
+  .providers {
+    max-height: 300px;
+  }
+
+  .provider {
+    width: 60px;
+  }
+
+  .mygrid {
+    grid-template-columns: 80px 1fr;
+  }
+
+  .topgrid {
+    grid-template-columns: 380px 1fr;
+  }
+
+  .selectedProvider {
+    background-color: #b6b7ff;
+  }
+
+  .providerCard {
+    margin-top: 5px;
+    max-width: 80%;
+    min-width: 40%;
+  }
+
+  .dialog {
+    top: 50px;
+    left: 7%;
+    max-width: 86%;
+    width: 90%;
+    min-height: 80%;
+  }
+
+  .p1 {
+    max-height: 300px;
+  }
+  .a1 {
+    display: flex;
+    flex-direction: row;
+    border-radius: 10px;
+  }
+
+  .a3 {
+    display: flex;
+    flex-direction: column;
+    max-width: 60%;
+    margin-left: 5%;
+  }
+
+  .b {
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    padding: 3px;
+    min-width: 450px;
+    background-color: #b6b7ff;
+    border-radius: 10px;
+  }
+
+  .b1 {
+    min-width: 200px;
+    padding: 5px;
+  }
+
+  .b2 {
+    min-width: 60%;
+    padding: 5px;
+  }
+
+  .o1 {
+    margin-left: 20%;
+  }
+
+  .logo {
+    max-height: 150px;
+
+  }
+
+  .header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 2%;
+  }
+}
