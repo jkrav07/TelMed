@@ -15,6 +15,12 @@ CREATE TABLE Providers (
   price INTEGER NOT NULL
 );
 
+ALTER TABLE Providers
+	ADD provider_photo text;
+
+ALTER TABLE Providers
+	ADD provider_email text;
+
 DROP TABLE IF EXISTS Patients;
 CREATE TABLE Patients (
   Patient_id serial PRIMARY KEY,

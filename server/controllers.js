@@ -1,6 +1,9 @@
 const express = require('express');
 const axios = require('axios');
 const model = require('./model');
+const sendEmail = require('../client/src/Sendgrid');
+var convertTime = require('convert-time');
+
 
 
 const controllers = {};
@@ -25,15 +28,39 @@ controllers.addAppt = async (req, res) => {
       console.log('patient was added to database')
     } else if (patients.length === 1) {
       if (patients[0].patient_name !== patientName) {
+        console.log("patien email already exists for names:", {patientName, p: patients[0].patient_name});
         res.status(501);
         res.send(`Patient "${patientName}" does not match ${patientEmail}`);
-        //console.log(res.send(`Patient "${patientName}" does not match ${patientEmail}`))
+//console.log(res.send(`Patient "${patientName}" does not match ${patientEmail}`))
       } else {
         patientId = patients[0].patient_id;
       }
     }
     let apt = await model.addAppt(date, timeslotId, patientId, providerId, symptoms);
-    console.log('appointment was added to database', apt);
+console.log('appointment was added to database', apt);
+
+
+    let provider = await model.findProviderName(providerId);
+    let timeslot = await model.findTimeslotName(timeslotId);
+    let providerName = provider[0].provider_name;
+    let startTime = convertTime(timeslot[0].starttime);
+    let endTime = convertTime(timeslot[0].endtime);
+    let emailDate = new Date(date.slice(0, 10)).toLocaleString('en-us', { month: 'long', day: 'numeric', year: 'numeric' });
+
+
+
+    let body = `Hello ${patientName}!
+    You have booked a telemedicine appointment with ${providerName} on ${emailDate} from ${startTime}-${endTime}.
+    We look forward to seeing you!`
+    let messageObj = {
+      to: 'j.krav07@gmail.com',
+      from: 'j.krav07@gmail.com',
+      subject: 'ExpressMed Appointment Booked',
+      text: body,
+      html: `<strong>${body}</strong>`,
+    }
+    sendEmail.sendEmail(messageObj);
+
     res.status(201).send(apt);;
   }
   catch (err) {
@@ -59,123 +86,65 @@ controllers.getProviders = (req, res) => {
   console.log('req qury:', req.query);
   model.retrieveProviders(date, timeslotId*1)
     .then(result => {
-      console.log('prov:', result);
       res.send(result);
     })
+    .catch(err => {
+      console.error('FIALED TO GET PROVIDERS:', err.message)
+    })
 };
 
-/*
-controllers.getReviews = (req, res) => {
-  const productId = req.query.product_id;
-  const page = req.query.page || 1;
-  const count = req.query.count || 5;
-  const sort = req.query.sort || 'relevant';
-  model
-    .retrieveReviews(productId, page, count, sort)
-    .then((result) => {
-      const responseData = {
-        "product": productId,
-        "page": page,
-        "count": count,
-        "results": result,
-      };
-      res.send(responseData);
+controllers.getProviderInfo = (req, res) => {
+  const providerEmail = req.params.email;
+  console.log('providerEmail', providerEmail)
+  model.retrieiveProviderInfo(providerEmail)
+    .then(result => {
+      console.log('Provider INFO from DB', result);
+      res.send(result);
     })
-    .catch((err) => {
-      console.log('UNABLE TO PROCESS REQUEST', err);
-      res.sendStatus(422);
-    });
+    .catch(err => {
+      console.error('FIALED TO GET PROVIDER INFO:', err.message)
+    })
 };
 
+controllers.cancelAppt = async (req, res) => {
+  const apptId = req.params.apptId;
+//  console.log('apptId', apptId);
 
+  try {
+    let apptInfo = await model.fetchApptInfo(apptId);
+//console.log('apptInfo', apptInfo);
+    if (apptInfo.length > 0) {
+      await model.removeAppt(apptId);
+      //Email notification to patient
+// console.log('provider_name', apptInfo[0].provider_name);
+      let providerName = apptInfo[0].provider_name;
+// console.log('providername', providerName)
+      let startTime = convertTime(apptInfo[0].starttime);
+// console.log('startTime', startTime)
+      let endTime = convertTime(apptInfo[0].endtime);
+      let emailDate = new Date(apptInfo[0].appointment_date.toString().slice(0, 10)).toLocaleString('en-us', { month: 'long', day: 'numeric', year: 'numeric' });
+// console.log('emailDate', emailDate)
+      let patientName = apptInfo[0].patient_name;
+      let patientEmail = apptInfo[0].patient_email;
+// console.log('patientName', patientName)
+      let body = `Hello ${patientName}!
+      We sincerely apologize, but your telemedicine appointment with ${providerName} on ${emailDate} from ${startTime}-${endTime} has been canceled. Please feel free to book a different appointment.`
+      let messageObj = {
+        to: patientEmail,
+        from: process.env.EMAIL,
+        subject: 'ExpressMed Appointment Canceled',
+        text: body,
+        html: `<strong>${body}</strong>`,
+      }
+      sendEmail.sendEmail(messageObj);
 
-controllers.getMetadata = (req, res) => {
-  const productId = req.query.product_id;
-  model
-    .retrieveMetaReviews(productId)
-    .then((result) => {
-      console.log(result);
-      //aasembling the response object from received result from db
-      let ratings = {};
-      result[0].forEach(rating => {
-        ratings[rating.rating] = rating.count
-      });
+    }
 
-      let recommended = {};
-      result[1].forEach(recommend => {
-        recommended[recommend.recommend] = recommend.count;
-      })
-
-      let characteristics = {};
-      result[2].forEach(characteristic => {
-        let name = characteristic.characteristic_name;
-        characteristics[name] = {};
-        characteristics[name].id = characteristic.characteristics_id;
-        characteristics[name].value = characteristic.avg;
-      })
-
-      const responseData = {
-        'product_id': productId,
-        'ratings': ratings,
-        'recommended': recommended,
-        'characteristics': characteristics
-      };
-      //console.log(responseData);
-      res.json(responseData);
-    })
-    .catch((err) => {
-      console.log('UNABLE TO GET METADATA', err);
-      res.sendStatus(422);
-    });
+    res.sendStatus(200);
+  }
+  catch (err) {
+    console.error('SERVER ERROR - FAILED TO CANCEL APPT', err.message);
+  }
 }
 
-
-controllers.postReview = (req, res) => {
-  const data = {
-    product_id: req.body.product_id,
-    rating: req.body.rating || 5,
-    summary: req.body.summary || '',
-    body: req.body.body || '',
-    recommend: req.body.recommend || false,
-    name: req.body.name || '',
-    email: req.body.email || '',
-    photos: req.body.photos || [],
-    characteristics: req.body.characteristics || {},
-  };
-  model.postReview(data)
-    .then((result) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.sendStatus(422);
-      console.error('FAILED TO ADD REVIEW:', err)
-    })
-};
-
-
-controllers.markReviewHelpful = (req, res) => {
-  const reviewId = req.params.review_id;
-  model.markReviewHelpful(reviewId)
-    .then((result) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.sendStatus(422);
-      console.error('FAILED TO MARK REVIEW AS HELPFUL')
-    })
-};
-
-controllers.markReviewReported = (req, res) => {
-  const reviewId = req.params.review_id;
-  model.markReviewReported(reviewId)
-    .then((result) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      res.sendStatus(422);
-      console.error('FAILED TO MARK REVIEW AS REPORTED')
-    })
-}
-
-*/
 module.exports = controllers;

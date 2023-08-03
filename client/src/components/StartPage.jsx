@@ -1,15 +1,14 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PatientApptPage from './PatientApptPage';
 
-export default function StartPage({ setPage }) {
-  function buttonOnClick(pageNum) {
-    setPage(pageNum);
-  }
+export default function StartPage() {
+  const navigate = useNavigate();
 
   return (
     <div id="start-page">
-      <button onClick={() => {buttonOnClick(1)}}>Patient</button>
-      <button onClick={() => {buttonOnClick(2)}}>Provider</button>
+      <button className="sp-button" onClick={() => {navigate('/PatientApptPage')}}>Patient</button>
+      <button className="sp-button" onClick={() => {navigate('/ProviderLoginPage')}}>Provider</button>
     </div>
   );
 }
