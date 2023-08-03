@@ -31,7 +31,7 @@ controllers.addAppt = async (req, res) => {
         console.log("patien email already exists for names:", {patientName, p: patients[0].patient_name});
         res.status(501);
         res.send(`Patient "${patientName}" does not match ${patientEmail}`);
-        //console.log(res.send(`Patient "${patientName}" does not match ${patientEmail}`))
+//console.log(res.send(`Patient "${patientName}" does not match ${patientEmail}`))
       } else {
         patientId = patients[0].patient_id;
       }
@@ -112,25 +112,26 @@ controllers.cancelAppt = async (req, res) => {
 
   try {
     let apptInfo = await model.fetchApptInfo(apptId);
-  //console.log('apptInfo', apptInfo);
+//console.log('apptInfo', apptInfo);
     if (apptInfo.length > 0) {
       await model.removeAppt(apptId);
       //Email notification to patient
- // console.log('provider_name', apptInfo[0].provider_name);
+// console.log('provider_name', apptInfo[0].provider_name);
       let providerName = apptInfo[0].provider_name;
 // console.log('providername', providerName)
       let startTime = convertTime(apptInfo[0].starttime);
- // console.log('startTime', startTime)
+// console.log('startTime', startTime)
       let endTime = convertTime(apptInfo[0].endtime);
       let emailDate = new Date(apptInfo[0].appointment_date.toString().slice(0, 10)).toLocaleString('en-us', { month: 'long', day: 'numeric', year: 'numeric' });
- // console.log('emailDate', emailDate)
+// console.log('emailDate', emailDate)
       let patientName = apptInfo[0].patient_name;
- // console.log('patientName', patientName)
+      let patientEmail = apptInfo[0].patient_email;
+// console.log('patientName', patientName)
       let body = `Hello ${patientName}!
       We sincerely apologize, but your telemedicine appointment with ${providerName} on ${emailDate} from ${startTime}-${endTime} has been canceled. Please feel free to book a different appointment.`
       let messageObj = {
-        to: 'j.krav07@gmail.com',
-        from: 'j.krav07@gmail.com',
+        to: patientEmail,
+        from: process.env.EMAIL,
         subject: 'ExpressMed Appointment Canceled',
         text: body,
         html: `<strong>${body}</strong>`,

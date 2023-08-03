@@ -52,8 +52,6 @@ const navigate = useNavigate();
     </div>
 
   )
-
-
 }
 
 

@@ -69,6 +69,7 @@ export default function PatientApptPage() {
       })
       .catch(err => {
         console.error(err.message);
+        alert(arr.message);
       })
   }
 
